@@ -1,3 +1,4 @@
+import InterviewCard from "@/components/InterviewCard";
 import { Button } from "@/components/ui/button";
 import { dummyInterviews } from "@/constants";
 import Image from "next/image";
@@ -22,8 +23,8 @@ const Page = () => {
       <section className=" flex flex-col gap-6 mt-8">
         <h2>Your Interviews</h2>
         <div className="interviews-section">
-          {dummyInterviews.map((interviews)=>(
-            <InterviewCard />
+          {dummyInterviews.map((interview)=>(
+            <InterviewCard {...interview} key={interview.id}/>
           ))}
         </div>
       </section>

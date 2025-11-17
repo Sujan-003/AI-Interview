@@ -91,7 +91,36 @@ const AuthForm = ({ type }: { type: FormType }) => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(`There was an error: ${error}`);
+
+      // Handle Firebase-specific errors
+      if (error && typeof error === "object" && "code" in error) {
+        const firebaseError = error as { code: string; message?: string };
+        switch (firebaseError.code) {
+          case "auth/email-already-in-use":
+            toast.error(
+              "This email is already registered. Please sign in instead."
+            );
+            break;
+          case "auth/weak-password":
+            toast.error("Password should be at least 6 characters.");
+            break;
+          case "auth/invalid-email":
+            toast.error("Invalid email address.");
+            break;
+          case "auth/user-not-found":
+            toast.error("No account found with this email.");
+            break;
+          case "auth/wrong-password":
+            toast.error("Incorrect password. Please try again.");
+            break;
+          default:
+            toast.error(
+              firebaseError.message || "An error occurred. Please try again."
+            );
+        }
+      } else {
+        toast.error("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
@@ -101,8 +130,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
     <div className="card-border lg:min-w-[566px]">
       <div className="flex flex-col gap-6 card py-14 px-10">
         <div className="flex flex-row gap-2 justify-center">
-          <Image src="/logo.svg" alt="logo" height={32} width={38} />
-          <h2 className="text-primary-100">PrepWise</h2>
+          <Image src="/logo.svg" alt="logo" height={190} width={210} />
         </div>
 
         <h3>Practice job interviews with AI</h3>

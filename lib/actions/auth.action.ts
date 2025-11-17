@@ -1,3 +1,4 @@
+"use server"
 import { auth, db } from "@/firebase/admin";
 import { cookies } from "next/headers";
 
@@ -17,6 +18,10 @@ export async function signUp(params: SignUpParams){
         name,
         email,
       });
+       return {
+         success: true,
+         message: "Account created successfully. Please sign in.",
+       };
     } catch (error) {
       console.error("Error creating a user", error);
 

@@ -11,7 +11,6 @@ import { cn, getRandomInterviewCover } from "@/lib/utils";
 const now = Date.now();
 const InterviewCard = async ({
   interviewId,
-  userId,
   role,
   type,
   techstack,

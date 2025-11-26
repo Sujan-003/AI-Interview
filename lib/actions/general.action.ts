@@ -1,4 +1,4 @@
-"use server"
+"use server";
 import { db } from "@/firebase/admin";
 
 export async function getInterviewsByUserId(
@@ -23,9 +23,10 @@ export async function getLatestInterviews(
 
   const interviews = await db
     .collection("interviews")
-    .orderBy("createdAt", "desc")
-    .where("finalized", "==", true)
+    .where("finalised", "==", true)
     .where("userId", "!=", userId)
+    .orderBy("userId") // Required: must order by inequality field first
+    .orderBy("createdAt", "desc") // Then order by createdAt
     .limit(limit)
     .get();
 
@@ -34,3 +35,12 @@ export async function getLatestInterviews(
     ...doc.data(),
   })) as Interview[];
 }
+
+export async function getInterviewById(id: string): Promise<Interview | null>{
+  const interview = await db
+      .collection('interviews')
+      .doc(id)
+      .get();
+
+      return interview.data() as Interview | null;
+} 

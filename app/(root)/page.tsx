@@ -1,6 +1,5 @@
 import InterviewCard from "@/components/InterviewCard";
 import { Button } from "@/components/ui/button";
-import { dummyInterviews } from "@/constants";
 import { getCurrentUser } from "@/lib/actions/auth.action";
 import {
   getInterviewsByUserId,
@@ -16,6 +15,7 @@ const Page = async () => {
     getInterviewsByUserId(user?.id!),
     getLatestInterviews({ userId: user?.id! }),
   ]);
+
 
   const hasUpcomingInterviews = latestInterviews?.length! > 0;
   const hasPastInterviews = userInterviews?.length! > 0;

@@ -10,7 +10,7 @@ import { cn, getRandomInterviewCover } from "@/lib/utils";
 
 const now = Date.now();
 const InterviewCard = async ({
-  interviewId,
+  id,
   role,
   type,
   techstack,
@@ -94,8 +94,8 @@ const InterviewCard = async ({
             <Link
               href={
                 feedback
-                  ? `/interview/${interviewId}/feedback`
-                  : `/interview/${interviewId}`
+                  ? `/interview/${id}/feedback`
+                  : `/interview/${id}`
               }
             >
               {feedback ? "Check Feedback" : "View Interview"}

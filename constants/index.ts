@@ -1,5 +1,5 @@
 import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
-import { z } from "zod"
+import { z } from "zod";
 
 export const mappings = {
   // --- existing entries ---
@@ -103,7 +103,7 @@ export const mappings = {
   java: "java",
   spring: "spring",
   "spring boot": "spring",
-  "springboot": "spring",
+  springboot: "spring",
   maven: "maven",
   gradle: "gradle",
 
@@ -148,7 +148,7 @@ export const mappings = {
   ios: "ios",
   "react native": "reactnative",
   reactnative: "reactnative",
-  "flutter": "flutter",
+  flutter: "flutter",
   dart: "dart",
 
   // DevOps / Infra
@@ -173,7 +173,7 @@ export const mappings = {
   // Misc
   parcel: "parcel",
   vite: "vite",
-  "vite.js": "vite"
+  "vite.js": "vite",
 };
 
 export const interviewer: CreateAssistantDTO = {
@@ -236,33 +236,13 @@ End the conversation on a polite and positive note.
 
 export const feedbackSchema = z.object({
   totalScore: z.number(),
-  categoryScores: z.tuple([
+  categoryScores: z.array(
     z.object({
-      name: z.literal("Communication Skills"),
+      name: z.string(),
       score: z.number(),
       comment: z.string(),
-    }),
-    z.object({
-      name: z.literal("Technical Knowledge"),
-      score: z.number(),
-      comment: z.string(),
-    }),
-    z.object({
-      name: z.literal("Problem Solving"),
-      score: z.number(),
-      comment: z.string(),
-    }),
-    z.object({
-      name: z.literal("Cultural Fit"),
-      score: z.number(),
-      comment: z.string(),
-    }),
-    z.object({
-      name: z.literal("Confidence and Clarity"),
-      score: z.number(),
-      comment: z.string(),
-    }),
-  ]),
+    })
+  ),
   strengths: z.array(z.string()),
   areasForImprovement: z.array(z.string()),
   finalAssessment: z.string(),

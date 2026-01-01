@@ -39,14 +39,11 @@ export async function getLatestInterviews(
   })) as Interview[];
 }
 
-export async function getInterviewById(id: string): Promise<Interview | null>{
-  const interview = await db
-      .collection('interviews')
-      .doc(id)
-      .get();
+export async function getInterviewById(id: string): Promise<Interview | null> {
+  const interview = await db.collection("interviews").doc(id).get();
 
-      return interview.data() as Interview | null;
-} 
+  return interview.data() as Interview | null;
+}
 
 export async function createFeedback(params: CreateFeedbackParams) {
   const { interviewId, userId, transcript, feedbackId } = params;
@@ -89,15 +86,15 @@ export async function createFeedback(params: CreateFeedbackParams) {
       createdAt: new Date().toISOString(),
     };
 
-    // let feedbackRef;
+    let feedbackRef;
 
-    // if (feedbackId) {
-    //   feedbackRef = db.collection("feedback").doc(feedbackId);
-    // } else {
-    //   feedbackRef = db.collection("feedback").doc();
-    // }
+    if (feedbackId) {
+      feedbackRef = db.collection("feedback").doc(feedbackId);
+    } else {
+      feedbackRef = db.collection("feedback").doc();
+    }
 
-    // await feedbackRef.set(feedback);
+    await feedbackRef.set(feedback);
 
     return { success: true, feedbackId: feedback.interviewId };
   } catch (error) {
@@ -107,22 +104,27 @@ export async function createFeedback(params: CreateFeedbackParams) {
 }
 
 export async function getFeedbackByInterviewId(
-  params : GetFeedbackByInterviewIdParams
+  params: GetFeedbackByInterviewIdParams
 ): Promise<Feedback | null> {
   const { interviewId, userId } = params;
+  console.log(
+    `[getFeedbackByInterviewId] Querying for interviewId: ${interviewId}, userId: ${userId}`
+  );
 
   const feedback = await db
     .collection("feedback")
-    .where('interviewId','==',interviewId)
+    .where("interviewId", "==", interviewId)
     .where("userId", "==", userId)
     .limit(1)
     .get();
-  if(feedback.empty) return null;
+
+  console.log(`[getFeedbackByInterviewId] Found docs: ${feedback.size}`);
+  if (feedback.empty) return null;
 
   const feedbackDoc = feedback.docs[0];
 
   return {
-    id: feedbackDoc.id, ...feedbackDoc.data()
-  } as Feedback
-  
+    id: feedbackDoc.id,
+    ...feedbackDoc.data(),
+  } as Feedback;
 }

@@ -6,23 +6,29 @@ import { Button } from "./ui/button";
 import DisplayTechIcons from "./DisplayTechIcons";
 
 import { cn, getRandomInterviewCover } from "@/lib/utils";
+import { getFeedbackByInterviewId } from "@/lib/actions/general.action";
 // import { getFeedbackByInterviewId } from "@/lib/actions/general.action";
 
 const now = Date.now();
 const InterviewCard = async ({
   id,
+  userId,
   role,
   type,
   techstack,
   createdAt,
 }: InterviewCardProps) => {
-  const feedback = null as Feedback
-    // userId && interviewId
-    //   ? await getFeedbackByInterviewId({
-    //       interviewId,
-    //       userId,
-    //     })
-      | null;
+  console.log("InterviewCard Inputs:", { userId, id });
+
+  const feedback =
+    userId && id
+      ? await getFeedbackByInterviewId({
+          interviewId: id,
+          userId,
+        })
+      : null;
+
+  console.log("Feedback result:", feedback);
 
   const normalizedType = /mix/gi.test(type) ? "Mixed" : type;
 
@@ -92,11 +98,7 @@ const InterviewCard = async ({
 
           <Button className="btn-primary">
             <Link
-              href={
-                feedback
-                  ? `/interview/${id}/feedback`
-                  : `/interview/${id}`
-              }
+              href={feedback ? `/interview/${id}/feedback` : `/interview/${id}`}
             >
               {feedback ? "Check Feedback" : "View Interview"}
             </Link>

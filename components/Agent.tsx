@@ -88,11 +88,11 @@ const Agent = ({
     const handleGenerateFeedback = async (messages: SavedMessage[]) => {
       console.log("handleGenerateFeedback");
 
-      const { success,  feedbackId } = await createFeedback({
+      const { success, feedbackId } = await createFeedback({
         interviewId: interviewId!,
         userId: userId!,
-        transcript: messages
-      })
+        transcript: messages,
+      });
 
       if (success && feedbackId) {
         router.push(`/interview/${interviewId}/feedback`);
@@ -102,40 +102,39 @@ const Agent = ({
       }
     };
     if (callStatus === CallStatus.FINISHED) {
-      if(type === "generate"){
-      router.push("/");
+      if (type === "generate") {
+        router.push("/");
       } else {
-        handleGenerateFeedback(messages)
+        handleGenerateFeedback(messages);
       }
     }
   }, [messages, callStatus, feedbackId, interviewId, router, type, userId]);
 
   const handleCall = async () => {
     setCallStatus(CallStatus.CONNECTING);
-    
-    if(type == "generate"){
-    await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
-      variableValues: {
-        username: userName,
-        userid: userId,
-      },
-    });
-  }else{
-    let formattedQuestions = "";
 
-    if(questions){
-      formattedQuestions = questions
+    if (type == "generate") {
+      await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
+        variableValues: {
+          username: userName,
+          userid: userId,
+        },
+      });
+    } else {
+      let formattedQuestions = "";
+
+      if (questions) {
+        formattedQuestions = questions
           .map((question) => `- ${question}`)
-          .join('\n');
-    }
-
-    await vapi.start(interviewer,{
-      variableValues: {
-        questions: formattedQuestions
+          .join("\n");
       }
-    })
-  }
 
+      await vapi.start(interviewer, {
+        variableValues: {
+          questions: formattedQuestions,
+        },
+      });
+    }
   };
 
   const handleDisconnect = async () => {
